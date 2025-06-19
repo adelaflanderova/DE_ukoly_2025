@@ -6,7 +6,7 @@ product_id
 ,product_type
 ,product_category
 FROM fair-ceiling-455612-s4.L1.L1_product
-WHERE product_category = "product" or product_category = "rent" -- klient chce jen tyto kategorie 
+WHERE product_category = "product" or product_category = "rent" -- klient chce jen tyto kategorie
 --WHERE product_category IN ('product', 'rent')
 ;
 
@@ -24,7 +24,7 @@ WHERE branch_name != "unknown" -- jen známé kategorie
 CREATE OR REPLACE VIEW fair-ceiling-455612-s4.L2.L2_invoice AS
 SELECT
 i.invoice_id
-,i.invoice_previous_id
+,i.invoice_previous_id --smazala bych, nedává mi to tu smysl 
 ,i.contract_id --FK
 ,i.date_issue
 ,i.due_date
@@ -44,7 +44,7 @@ FROM fair-ceiling-455612-s4.L1.L1_invoice i
 INNER JOIN fair-ceiling-455612-s4.L1.L1_contract c
 ON i.contract_id = c.contract_id
 WHERE i.invoice_type = 'invoice' AND flag_invoice_issued = true -- stanoveno zákazníkem 
-ORDER BY contract_id, date_issue
+ORDER BY contract_id, date_issue --nemusí být
 ;
 
 --L2 contract 
