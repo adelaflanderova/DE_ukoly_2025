@@ -4,7 +4,7 @@ CREATE OR REPLACE VIEW fair-ceiling-455612-s4.L1.L1_status AS
 SELECT 
   CAST(id_status AS INT) AS product_status_id --PK
   ,LOWER(status_name) AS product_status_name -- vše na malá písmena 
-  ,DATE(TIMESTAMP(date_update), 'Europe/Prague') AS product_status_update_date -- vše v jednom čas.pásmu 
+ --zbytečný ,DATE(TIMESTAMP(date_update), 'Europe/Prague') AS product_status_update_date -- vše v jednom čas.pásmu 
 FROM fair-ceiling-455612-s4.L0_google_sheet.status
 WHERE id_status IS NOT NULL -- nechci null hodnoty
   AND status_name IS NOT NULL 
@@ -17,7 +17,7 @@ CREATE OR REPLACE VIEW fair-ceiling-455612-s4.L1.L1_branch AS
 SELECT 
   CAST(id_branch AS INT) AS branch_id --PK
   ,branch_name
-  ,DATE(TIMESTAMP(date_update), 'Europe/Prague') AS product_branch_update_date
+--  ,DATE(TIMESTAMP(date_update), 'Europe/Prague') AS product_branch_update_date --zbytečný, nemusí tu vůbec být
 FROM fair-ceiling-455612-s4.L0_google_sheet.branch
 WHERE id_branch != "NULL"
 ;
@@ -25,14 +25,14 @@ WHERE id_branch != "NULL"
 --L1 product
 CREATE OR REPLACE VIEW fair-ceiling-455612-s4.L1.L1_product AS
 SELECT
-  id_product AS product_id --PK
-  ,name AS product_name
-  ,type AS product_type
-  ,category AS product_category
-  ,CAST(is_vat_applicable AS BOOL) AS is_vat_applicable
-  ,DATE(TIMESTAMP(date_update), 'Europe/Prague') AS product_update_date
+  CAST(id_product AS INT) AS product_id --PK
+  ,LOWER(name) AS product_name
+  ,LOWER(type) AS product_type
+  ,LOWER(category) AS product_category
+  --,CAST(is_vat_applicable AS BOOL) AS is_vat_applicable
+ -- ,DATE(TIMESTAMP(date_update), 'Europe/Prague') AS product_update_date
 FROM fair-ceiling-455612-s4.L0_google_sheet.product
-where id_product IS NOT NULL
+where id_product IS NOT NULL AND name IS NOT NULL
 QUALIFY ROW_NUMBER() OVER(PARTITION BY id_product) = 1
 ;
 
@@ -56,7 +56,7 @@ SELECT
   ,DATE(TIMESTAMP(date_update),'Europe/Prague') AS update_date
   ,value AS amount_w_vat
   ,payed AS amount_payed
-  ,flag_paid_currier 
+--  ,flag_paid_currier 
   ,invoice_type AS invoice_type_id -- Invoice_type: 1 - invoice, 3 -  credit_note, 2 - return, 4 - other
   ,CASE
     WHEN invoice_type = 1 THEN "invoice"
@@ -78,7 +78,7 @@ SELECT
   ,id_invoice AS invoice_id --FK
   ,id_package_template AS product_id --FK
   ,notlei AS price_wo_vat_usd
-  ,currency
+ -- ,currency
   ,tva AS vat_rate
   ,value AS price_w_vat_usd
   ,payed AS paid_w_vat_usd
