@@ -2,6 +2,7 @@
 CREATE OR REPLACE VIEW fair-ceiling-455612-s4.L3.L3_product AS
 SELECT
 p.product_id
+,pp.product_purchase_id
 ,pp.product_valid_from
 ,pp.product_valid_to
 ,pp.measure_unit
@@ -23,6 +24,7 @@ contract_id
 ,prolongation_date
 ,registration_end_reason
 ,contract_status
+,start_year_of_contrcat -- toto bych tu doplnila 
 FROM fair-ceiling-455612-s4.L2.L2_contract 
 ;
 
@@ -44,6 +46,7 @@ i.invoice_id
 ,i.amount_w_vat
 ,i.return_w_vat
 ,pp.product_id
+,total_paid 
 FROM fair-ceiling-455612-s4.L2.L2_invoice i
 LEFT JOIN fair-ceiling-455612-s4.L2.L2_product_purchase pp
 ON pp.contract_id = i.contract_id --může být i inner join
